@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-import boto3
 import base64
 import json
 import requests
-from botocore.exceptions import ClientError
 import os
 secret_key = os.urandom(24)
 app = Flask(__name__)
