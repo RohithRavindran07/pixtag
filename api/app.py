@@ -260,7 +260,8 @@ def query_image_tags():
     return render_template('query.html')
 
 @app.route('/logout')
+@cognito_logout
 def logout():
-    return redirect("https://pixtag38.auth.us-east-1.amazoncognito.com/login?client_id=9jhjt7qirggh9snla7b07ukqk&response_type=code&scope=openid+profile&redirect_uri=https%3A%2F%2Fmdzrrlabog.execute-api.us-east-1.amazonaws.com%2Ftest")
+    pass
 if __name__ == '__main__':
     app.run(debug=True)
