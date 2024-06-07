@@ -263,11 +263,11 @@ def query_image_tags():
 
     return render_template('query.html')
 
-# @app.route("/logout")
-# @cognito_logout
-# def logout():
-#     session.clear()  # Clear Flask session
-#     response = redirect("/")  # Redirect to home or login page
-#     return response
+@app.route("/logout")
+@cognito_logout
+def logout():
+    session.clear()  # Clear Flask session
+    response = redirect("/")  # Redirect to home or login page
+    return response
 if __name__ == '__main__':
     app.run(debug=True)
