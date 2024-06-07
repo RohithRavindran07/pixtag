@@ -23,7 +23,7 @@ app.secret_key = str(secret_key)
 # Configuration required for CognitoAuth
 app.config["AWS_REGION"] = "us-east-1"
 app.config["AWS_COGNITO_USER_POOL_ID"] = "us-east-1_16xwSaIul"
-app.config["AWS_COGNITO_DOMAIN"] = "https://pixtag38.auth.us-east-1.amazoncognito.com"
+app.config["AWS_COGNITO_DOMAIN"] = "pixtag38.auth.us-east-1.amazoncognito.com"
 app.config["AWS_COGNITO_USER_POOL_CLIENT_ID"] = "9jhjt7qirggh9snla7b07ukqk"
 app.config["AWS_COGNITO_REDIRECT_URL"] = "https://pixtag.vercel.app/postlogin"
 app.config["AWS_COGNITO_LOGOUT_URL"] = "https://pixtag.vercel.app"
