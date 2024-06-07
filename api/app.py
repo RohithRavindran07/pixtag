@@ -16,12 +16,8 @@ from flask_cognito_lib.exceptions import (
     AuthorisationRequiredError,
     CognitoGroupRequiredError,
 )
-
-app = Flask(__name__)
-auth = CognitoAuth(app)
-
-
 secret_key = os.urandom(24)
+app = Flask(__name__)
 app.secret_key = str(secret_key)
 
 # Configuration required for CognitoAuth
@@ -35,6 +31,7 @@ app.config["AWS_COGNITO_LOGOUT_URL"] = "https://pixtag.vercel.app/logout"
 app.config["AWS_COGNITO_REFRESH_FLOW_ENABLED"] = True
 app.config["AWS_COGNITO_REFRESH_COOKIE_ENCRYPTED"] = True
 app.config["AWS_COGNITO_REFRESH_COOKIE_AGE_SECONDS"] = 86400
+auth = CognitoAuth(app)
 
 
 @app.route('/')
@@ -46,7 +43,7 @@ def index():
 
 
 @app.route('/upload', methods=['GET', 'POST'])
-@cognito_login_callback
+@auth_required()
 def upload_image():
     if request.method == 'POST':
         file = request.files['file']
@@ -76,7 +73,7 @@ def upload_image():
     return render_template('upload.html')
 
 @app.route('/searchthumbnail', methods=['GET', 'POST'])
-@cognito_login_callback
+@auth_required()
 def search_thumbnail():
     if request.method == 'POST':
         thumbnail_url = request.form['thumbnail_url']
@@ -101,7 +98,7 @@ def search_thumbnail():
     return render_template('search_thumbnail.html')
 
 @app.route('/delete', methods=['GET', 'POST'])
-@cognito_login_callback
+@auth_required()
 def delete_images():
     images = []
     try:
@@ -144,7 +141,7 @@ def delete_images():
             flash(str(e), "danger")
     return render_template('delete.html', images=images)
 @app.route('/edit', methods=['GET', 'POST'])
-@cognito_login_callback
+@auth_required()
 def edit_tags():
     try:
         get_all_data = "https://6afpoe4d5a.execute-api.us-east-1.amazonaws.com/prod/api/get_thumb"
@@ -184,7 +181,7 @@ def edit_tags():
 
     return render_template('edit.html', items=items)
 @app.route('/find', methods = ['GET','POST'])
-@cognito_login_callback
+@auth_required()
 def get_image_tag():
     if request.method == 'POST':
         tags = request.form.get('tags')
@@ -218,7 +215,7 @@ def get_image_tag():
             flash(str(e), "danger")
     return render_template('find.html')
 @app.route('/query', methods=['GET', 'POST'])
-@cognito_login_callback
+@auth_required()
 def query_image_tags():
     if request.method == 'POST':
         try:
