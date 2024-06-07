@@ -26,7 +26,7 @@ app.config["AWS_COGNITO_USER_POOL_ID"] = "us-east-1_16xwSaIul"
 app.config["AWS_COGNITO_DOMAIN"] = "https://pixtag38.auth.us-east-1.amazoncognito.com"
 app.config["AWS_COGNITO_USER_POOL_CLIENT_ID"] = "9jhjt7qirggh9snla7b07ukqk"
 # app.config["AWS_COGNITO_USER_POOL_CLIENT_SECRET"] = "zxcvbnm1234567890"
-app.config["AWS_COGNITO_REDIRECT_URL"] = "https://pixtag.vercel.app/upload"
+app.config["AWS_COGNITO_REDIRECT_URL"] = "https://pixtag.vercel.app/postlogin"
 app.config["AWS_COGNITO_LOGOUT_URL"] = "https://pixtag.vercel.app/logout"
 app.config["AWS_COGNITO_REFRESH_FLOW_ENABLED"] = True
 app.config["AWS_COGNITO_REFRESH_COOKIE_ENCRYPTED"] = True
@@ -41,6 +41,10 @@ def index():
     session['state'] = "true"
     return redirect("https://pixtag38.auth.us-east-1.amazoncognito.com/login?client_id=9jhjt7qirggh9snla7b07ukqk&response_type=code&scope=openid+profile&redirect_uri=https%3A%2F%2Fpixtag.vercel.app%2F")
 
+@app.route("/postlogin")
+@auth_required()
+def postlogin():
+    return redirect(url_for("upload_image"))
 
 @app.route('/upload', methods=['GET', 'POST'])
 @cognito_login_callback
