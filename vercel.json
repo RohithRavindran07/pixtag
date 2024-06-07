@@ -1,46 +1,14 @@
 {
-  "builds": [
-    {
-      "src": "api/app.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/login",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/upload",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/searchthumbnail",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/delete",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/edit",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/find",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/query",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/logout",
-      "dest": "api/app.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "api/app.py"
-    }
+     "builds": [
+         {
+             "src": "api/app.py",
+             "use": "@vercel/python"
+         }
+     ],
+     "routes": [
+         {
+             "src": "/(.*)",
+             "dest": "api/app.py"
+      }
   ]
 }
