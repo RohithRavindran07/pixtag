@@ -44,6 +44,11 @@ def index():
 @app.route("/postlogin")
 @cognito_login_callback
 def postlogin():
+    return redirect(url_for("index_redirect"))
+
+@app.route('/home', methods=['GET', 'POST'])
+@auth_required()
+def index_redirect():
     return render_template("index.html")
 
 @app.route('/upload', methods=['GET', 'POST'])
