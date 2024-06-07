@@ -3,13 +3,50 @@ import base64
 import json
 import requests
 import os
-secret_key = os.urandom(24)
+
+from flask_cognito_lib import CognitoAuth
+from flask_cognito_lib.decorators import (
+    auth_required,
+    cognito_login,
+    cognito_login_callback,
+    cognito_logout,
+    cognito_refresh_callback,
+)
+from flask_cognito_lib.exceptions import (
+    AuthorisationRequiredError,
+    CognitoGroupRequiredError,
+)
+
 app = Flask(__name__)
+auth = CognitoAuth(app)
+
+
+secret_key = os.urandom(24)
 app.secret_key = str(secret_key)
+
+# Configuration required for CognitoAuth
+app.config["AWS_REGION"] = "us-east-1"
+app.config["AWS_COGNITO_USER_POOL_ID"] = "us-east-1_16xwSaIul"
+app.config["AWS_COGNITO_DOMAIN"] = "https://pixtag38.auth.us-east-1.amazoncognito.com"
+app.config["AWS_COGNITO_USER_POOL_CLIENT_ID"] = "9jhjt7qirggh9snla7b07ukqk"
+# app.config["AWS_COGNITO_USER_POOL_CLIENT_SECRET"] = "zxcvbnm1234567890"
+app.config["AWS_COGNITO_REDIRECT_URL"] = "https://pixtag.vercel.app/"
+app.config["AWS_COGNITO_LOGOUT_URL"] = "https://pixtag.vercel.app/logout"
+app.config["AWS_COGNITO_REFRESH_FLOW_ENABLED"] = True
+app.config["AWS_COGNITO_REFRESH_COOKIE_ENCRYPTED"] = True
+app.config["AWS_COGNITO_REFRESH_COOKIE_AGE_SECONDS"] = 86400
+
+
 @app.route('/')
+@cognito_login
 def index():
-    return render_template('index.html')
+    # return render_template('index.html')
+    session['state'] = "true"
+    return redirect("https://pixtag38.auth.us-east-1.amazoncognito.com/login?client_id=9jhjt7qirggh9snla7b07ukqk&response_type=code&scope=openid+profile&redirect_uri=https%3A%2F%2Fpixtag.vercel.app%2F")
+
+
 @app.route('/upload', methods=['GET', 'POST'])
+@cognito_login_callback
 def upload_image():
     if request.method == 'POST':
         file = request.files['file']
@@ -39,6 +76,7 @@ def upload_image():
     return render_template('upload.html')
 
 @app.route('/searchthumbnail', methods=['GET', 'POST'])
+@cognito_login_callback
 def search_thumbnail():
     if request.method == 'POST':
         thumbnail_url = request.form['thumbnail_url']
@@ -63,6 +101,7 @@ def search_thumbnail():
     return render_template('search_thumbnail.html')
 
 @app.route('/delete', methods=['GET', 'POST'])
+@cognito_login_callback
 def delete_images():
     images = []
     try:
@@ -105,6 +144,7 @@ def delete_images():
             flash(str(e), "danger")
     return render_template('delete.html', images=images)
 @app.route('/edit', methods=['GET', 'POST'])
+@cognito_login_callback
 def edit_tags():
     try:
         get_all_data = "https://6afpoe4d5a.execute-api.us-east-1.amazonaws.com/prod/api/get_thumb"
@@ -144,6 +184,7 @@ def edit_tags():
 
     return render_template('edit.html', items=items)
 @app.route('/find', methods = ['GET','POST'])
+@cognito_login_callback
 def get_image_tag():
     if request.method == 'POST':
         tags = request.form.get('tags')
@@ -177,6 +218,7 @@ def get_image_tag():
             flash(str(e), "danger")
     return render_template('find.html')
 @app.route('/query', methods=['GET', 'POST'])
+@cognito_login_callback
 def query_image_tags():
     if request.method == 'POST':
         try:
