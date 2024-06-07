@@ -42,12 +42,12 @@ def index():
     return redirect("https://pixtag38.auth.us-east-1.amazoncognito.com/login?client_id=9jhjt7qirggh9snla7b07ukqk&response_type=code&scope=openid+profile&redirect_uri=https%3A%2F%2Fpixtag.vercel.app%2F")
 
 @app.route("/postlogin")
-@auth_required()
+@cognito_login_callback
 def postlogin():
     return redirect(url_for("upload_image"))
 
 @app.route('/upload', methods=['GET', 'POST'])
-@cognito_login_callback
+@auth_required()
 def upload_image():
     if request.method == 'POST':
         file = request.files['file']
