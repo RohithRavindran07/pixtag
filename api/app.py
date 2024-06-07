@@ -27,7 +27,7 @@ app.config["AWS_COGNITO_DOMAIN"] = "https://pixtag38.auth.us-east-1.amazoncognit
 app.config["AWS_COGNITO_USER_POOL_CLIENT_ID"] = "9jhjt7qirggh9snla7b07ukqk"
 # app.config["AWS_COGNITO_USER_POOL_CLIENT_SECRET"] = "zxcvbnm1234567890"
 app.config["AWS_COGNITO_REDIRECT_URL"] = "https://pixtag.vercel.app/postlogin"
-app.config["AWS_COGNITO_LOGOUT_URL"] = "https://pixtag.vercel.app/logout"
+app.config["AWS_COGNITO_LOGOUT_URL"] = "https://pixtag.vercel.app/afterlogout"
 app.config["AWS_COGNITO_REFRESH_FLOW_ENABLED"] = True
 app.config["AWS_COGNITO_REFRESH_COOKIE_ENCRYPTED"] = True
 app.config["AWS_COGNITO_REFRESH_COOKIE_AGE_SECONDS"] = 86400
@@ -263,5 +263,10 @@ def query_image_tags():
 @cognito_logout
 def logout():
     pass
+
+@app.route('/afterlogout')
+def after_logout():
+    return redirect(url_for("index"))
+
 if __name__ == '__main__':
     app.run(debug=True)
