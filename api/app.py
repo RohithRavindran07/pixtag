@@ -46,6 +46,11 @@ def index():
 def postlogin():
     return redirect(url_for("index_redirect"))
 
+@app.route("/refresh", methods=["POST"])
+@cognito_refresh_callback
+def refresh():
+    pass
+
 @app.route('/home', methods=['GET', 'POST'])
 @auth_required()
 def index_redirect():
